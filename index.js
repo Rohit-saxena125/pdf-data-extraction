@@ -6,6 +6,7 @@ const app = express();
 app.use("/", express.static("public"));
 app.use(fileUpload());
 app.post("/extract-text", (req, res) => {
+  try{
   if (req.files.pdfFile === null) {
     return res.status(400).send("No file uploaded");
   }
@@ -22,7 +23,7 @@ app.post("/extract-text", (req, res) => {
         let pay= "";
         for (var i = 0; i < lines.length; i++) 
         {
-          if ((lines[i].match(/\d{2}-\d{2}-\d{4}/g) ||lines[i].match(/(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?),+(\d{1,2}),+(\d{4})/g)||lines[i].match(/\d{2}\/\d{2}\/\d{4}/g))||(lines[i].match(/\d{2}-\d{1}-\d{4}/g)||lines[i].match(/\d{2}\/\d{1}\/\d{4}/g)))
+          if ((lines[i].match(/\d{1,2}-\d{1,2}-\d{4}/g) ||lines[i].match(/(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?),+(\d{1,2}),+(\d{4})/g)||lines[i].match(/\d{1,2}\/\d{1,2}\/\d{4}/g))))
           {
             newText += lines[i] + "\n";  
           } 
@@ -45,5 +46,9 @@ app.post("/extract-text", (req, res) => {
       }); //.then()     //delete file
     }
   );
+  }
+  catch (err) {
+    res.status(500).send("kuch to error hai");
+  }
 });
 app.listen(4000);
